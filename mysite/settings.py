@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,8 +20,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@w_tgr@=os)7(gk^hg3#gef5y1@7(*bouod5nkp97p^!_b%tj$'
+env_list = dict()
+local_env = open(os.path.join(BASE_DIR, '.env'))
 
+while True:
+    line = local_env.readline()
+    if not line:
+        break
+    line = line.replace('\n', '')
+    start = line.find('=')
+    key = line[:start]
+    value = line[start + 1:]
+    env_list[key] = value
+
+SECRET_KEY = env_list['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -40,6 +52,7 @@ INSTALLED_APPS = [
 
     #myapp
     'accountsapp',
+
  # 설치한 라이브러리들
     'rest_framework',
     'rest_framework.authtoken',
